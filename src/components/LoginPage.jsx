@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LoginHandler from './LoginHandler';
 import '../App.css';
+import Mahidol_logo from '../assets/Mahidol_logo.png'
 
 function Login() {
     const [authMode, setAuthMode] = useState('student'); // 'student' or 'auth'
@@ -20,7 +21,7 @@ function Login() {
             <div className="bg-gray-50 shadow-2xl rounded-lg px-8 pt-6 pb-8">
               <div className='text-center'>
                 <div className='flex justify-center items-center mb-3'>
-                  <img src="public\assets\Mahidol_logo.png" alt="Mahidol_logo" className='rounded-full w-20 h-18' />
+                  <img src={Mahidol_logo} alt="Mahidol_logo" className='rounded-full w-20 h-18' />
                 </div>
                 <h1 className="text-2xl font-bold mb-4">MAHIDOL STUDENT LOG IN</h1>
                 {authMode === 'student' ? (
