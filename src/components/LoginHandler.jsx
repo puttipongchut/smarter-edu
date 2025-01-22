@@ -1,25 +1,41 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import LoginSuccessModal from './LoginSuccess';
+import LoginFailedModal from './LoginFail';
+import './LoginHandler.css';
 
 function LoginHandler() {
     const [studentEmail, setStudentEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const validEmail = 'student@mahidol.ac.th';
-    const validPassword = 'password';
+    const validEmail = 'user@student.mahidol.ac.th';
+    const validPassword = '123';
 
     const handleLogin = () => {
         if (studentEmail === validEmail && password === validPassword) {
+            setShowModal(true);
             login();
-            alert('Login successful!');
-            navigate('/home');
+            
+            setTimeout(() => {
+                setShowModal(false);
+                navigate('/home');
+              }, 3000);
         } else {
-            alert('Invalid email or password.');
+            setShowFailModal(true);
+            setTimeout(() => setShowFailModal(false), 2000);
         }
     };
+
+    const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
 
     return (
         <>
@@ -47,6 +63,7 @@ function LoginHandler() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
             <button
@@ -55,6 +72,9 @@ function LoginHandler() {
             >
                 Log In
             </button>
+
+            {showModal && <LoginSuccessModal onClose={() => setShowModal(false)} />}
+            {showFailModal && <LoginFailedModal onClose={() => setShowFailModal(false)} />}
         </>
     );
 }
