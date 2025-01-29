@@ -13,8 +13,8 @@ function LoginHandler() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const validEmail = 'user@student.mahidol.ac.th';
-    const validPassword = '123';
+    const validEmail = import.meta.env.VITE_USER_NAME;
+    const validPassword = import.meta.env.VITE_PASS_WORD;
 
     const handleLogin = () => {
         if (studentEmail === validEmail && password === validPassword) {
