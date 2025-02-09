@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import PreLoader from "../components/Preloader";
+import StudentInfo from "../components/StudentInfo";
 import { FaUser, FaUserGraduate, FaArrowLeft, FaClipboardList, FaList, FaChartBar, FaLanguage, FaChevronUp, FaChevronDown, } from "react-icons/fa6";
 
 
@@ -77,7 +78,7 @@ function Home() {
 
       {/* Back Button */}
       {selectedMenu && (
-        <button onClick={() => setSelectedMenu(null)} className="mt-4 text-blue-600 flex items-center space-x-2">
+        <button onClick={() => setSelectedMenu(null)} className="mt-6 mb-4 px-4 py-2 bg-[#0035AD] text-white flex items-center space-x-2 shadow-md rounded-lg w-full max-w-md justify-center hover:bg-blue-700 transition">
           <FaArrowLeft />
           <span>Back</span>
         </button>
@@ -89,7 +90,7 @@ function Home() {
           {/* Navigation Buttons */}
           <div className="grid grid-cols-1 gap-4">
             <button
-              className="w-full bg-blue-500 text-white flex items-center justify-between px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+              className="w-full bg-[#0035AD] text-white flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition"
               onClick={() => setSelectedMenu('studentInfo')}
             >
               <span className="flex items-center space-x-3">
@@ -99,7 +100,7 @@ function Home() {
             </button>
 
             <button
-              className="w-full bg-blue-500 text-white flex items-center justify-between px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+              className="w-full bg-[#0035AD] text-white flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition"
               onClick={() => setSelectedMenu('registration')}
             >
               <span className="flex items-center space-x-3">
@@ -109,7 +110,7 @@ function Home() {
             </button>
 
             <button
-              className="w-full bg-blue-500 text-white flex items-center justify-between px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+              className="w-full bg-[#0035AD] text-white flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition"
               onClick={() => setSelectedMenu('transcript')}
             >
               <span className="flex items-center space-x-3">
@@ -119,7 +120,7 @@ function Home() {
             </button>
 
             <button
-              className="w-full bg-blue-500 text-white flex items-center justify-between px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+              className="w-full bg-[#0035AD] text-white flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition"
               onClick={() => setSelectedMenu('englishProficiency')}
             >
               <span className="flex items-center space-x-3">
@@ -130,7 +131,7 @@ function Home() {
 
             {/* GPA Dropdown Button */}
             <button
-              className="w-full bg-blue-500 text-white flex items-center justify-between px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+              className="w-full bg-[#0035AD] text-white flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition"
               onClick={() => setShowGPA(!showGPA)}
             >
               <span className="flex items-center space-x-3">
@@ -154,13 +155,11 @@ function Home() {
         </div>
       )}
 
-      {/* Dynamic Content Section */}
-      {selectedMenu && (
-        <div className="bg-white shadow-lg rounded-lg p-6 mt-6 w-full max-w-md text-center">
-          <h2 className="text-lg font-semibold mb-4">{selectedMenu.replace(/([A-Z])/g, ' $1')}</h2>
-          <p className="text-gray-600">Content for {selectedMenu} goes here.</p>
-        </div>
-      )}
+      {selectedMenu === "studentInfo" && <StudentInfo />}
+      {/* {selectedMenu === "registration" && <CourseRegistration />}
+      {selectedMenu === "transcript" && <StudentTranscript />}
+      {selectedMenu === "englishProficiency" && <EnglishProficiency />} */}
+
     </div>
   );
 }
