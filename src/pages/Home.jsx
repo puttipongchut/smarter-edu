@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './Home.css';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext";
+import axios from "axios";
 import PreLoader from "../components/Preloader";
 import CourseRegistration from "../components/CourseReg";
 import StudentInfo from "../components/StudentInfo";
@@ -12,7 +12,6 @@ import { FaUser, FaUserGraduate, FaArrowLeft, FaClipboardList, FaList, FaChartBa
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const { logout } = useAuth();
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [showGPA, setShowGPA] = useState(false);
@@ -37,12 +36,12 @@ function Home() {
 
   if (isLoading) {
     return <PreLoader />;
-  }
+  };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  }
+  const handleLogout = async () => {
+    await axios.post("http://localhost:8080/logout", {}, { withCredentials: true });
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4">

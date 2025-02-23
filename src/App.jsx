@@ -1,23 +1,22 @@
-import { Routes, Route } from 'react-router-dom';
-import Login from './pages/LoginPage';
-import Home from './pages/Home';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import './App.css';
-import PrivateRoute from './components/PrivateRoute';
-import { AuthProvider } from './components/AuthContext';
+import Login from "./pages/LoginPage";
+import Home from "./pages/Home";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
+  const [token, setToken] = useState(null);
+
   return (
-    <AuthProvider>
+    <Router>
       <Routes>
-        <Route path='/' element={<Login />}/>
-        <Route
-         path='/home'
-         element={
-         <PrivateRoute>
-          <Home />
-         </PrivateRoute>}/>
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/home" element={<Home />} />
+        </Route>
       </Routes>
-    </AuthProvider>
+    </Router>
   );
 }
 

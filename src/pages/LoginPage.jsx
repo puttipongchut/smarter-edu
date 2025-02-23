@@ -1,21 +1,53 @@
 import { useState } from 'react';
-import LoginHandler from '../components/LoginHandler';
-import Mahidol_logo from '../assets/Mahidol_logo.png'
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Mahidol_logo from '../assets/Mahidol_logo.png';
+import LoginSuccessModal from '../components/LoginSuccess';
 
-function Login() {
-  const [authMode, setAuthMode] = useState('student'); // 'student' or 'auth'
+const Login = ({ setToken }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const handleModalOpen = () => setShowModal(true);
+  const handleModalClose = () => setShowModal(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [authMode, setAuthMode] = useState('user');
+  const navigate = useNavigate();
 
   const handleAuthClick = () => {
     setAuthMode('auth');
   };
 
   const handleBackClick = () => {
-    setAuthMode('student');
+    setAuthMode('user');
   };
 
-  const handleModalOpen = () => setShowModal(true);
-  const handleModalClose = () => setShowModal(false);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      const response = await axios.post('http://localhost:8080/login', { email, password }, { withCredentials: true });
+      setToken(response.data.token);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+        navigate('/home');
+      }, 3000);
+      
+      //navigate('/home'); // Redirect to Home page
+    } catch (error) {
+      setError("Invalid email or password");
+    }
+  };
 
   return (
     <>
@@ -27,7 +59,7 @@ function Login() {
                 <img src={Mahidol_logo} alt="Mahidol_logo" className='rounded-full w-20 h-18' />
               </div>
               <h1 className="text-2xl font-bold mb-4">MAHIDOL STUDENT LOG IN</h1>
-              {authMode === 'student' ? (
+              {authMode === 'user' ? (
                 <>
                   <p className="mb-4 text-xl">สวัสดี! นักศึกษามหาวิทยาลัยมหิดล</p>
                   <p className="mb-4 text-xl">สำหรับนักศึกษาที่มีรหัสผ่าน Internet Account คลิกเข้าระบบที่ปุ่ม Mahidol Authen</p>
@@ -46,7 +78,42 @@ function Login() {
                   >
                     ← Back
                   </button>
-                  <LoginHandler />
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                      {error && <p className="text-red-500">{error}</p>}
+                      <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
+                        Student Email
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="student-email"
+                        type="email"
+                        placeholder="Enter your student email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
+                        Password
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                      />
+                    </div>
+                    <button
+                      className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
+                      type='submit'
+                    >
+                      Log In
+                    </button>
+                  </form>
                 </>
               )}
             </div>
@@ -61,6 +128,8 @@ function Login() {
           </div>
         </div>
       </div>
+
+      {showSuccessModal && <LoginSuccessModal onClose={() => setShowModal(false)} />}
 
       {showModal && (
         <div className="homePage fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -78,7 +147,7 @@ function Login() {
             <p className="text-lg text-gray-800">
               Email : user@student.mahidol.ac.th
             </p>
-            <p className='text-lg text-gray-800'>Password : password</p>
+            <p className='text-lg text-gray-800'>Password : password123</p>
 
             {/* Close Button */}
             <div className="mt-4 text-center">
@@ -94,6 +163,10 @@ function Login() {
       )}
     </>
   );
+}
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
 }
 
 export default Login;
