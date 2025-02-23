@@ -11,6 +11,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to={token ? "/home" : "/login"} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route element={<PrivateRoute />}>
           <Route path="/home" element={<Home />} />
