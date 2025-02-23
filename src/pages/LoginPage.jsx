@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../App.css';
 import LoginHandler from '../components/LoginHandler';
 import Mahidol_logo from '../assets/Mahidol_logo.png'
 
