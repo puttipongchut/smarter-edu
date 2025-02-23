@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import './Home.css';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import PreLoader from "../components/Preloader";
+import CourseRegistration from "../components/CourseReg";
 import StudentInfo from "../components/StudentInfo";
+import EnglishProficiency from "../components/EnglishProficiency";
 import StudentTranscript from "../components/StudentTranscript";
 import { FaUser, FaUserGraduate, FaArrowLeft, FaClipboardList, FaList, FaChartBar, FaLanguage, FaChevronUp, FaChevronDown, } from "react-icons/fa6";
 
@@ -157,9 +160,9 @@ function Home() {
       )}
 
       {selectedMenu === "studentInfo" && <StudentInfo />}
-      {/* {selectedMenu === "registration" && <CourseRegistration />} */}
+      {selectedMenu === "registration" && <CourseRegistration />}
       {selectedMenu === "transcript" && <StudentTranscript />}
-      {/* {selectedMenu === "englishProficiency" && <EnglishProficiency />} */}
+      {selectedMenu === "englishProficiency" && <EnglishProficiency />}
 
     </div>
   );

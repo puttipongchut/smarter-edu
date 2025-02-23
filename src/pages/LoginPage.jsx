@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import LoginHandler from './LoginHandler';
 import '../App.css';
+import LoginHandler from '../components/LoginHandler';
 import Mahidol_logo from '../assets/Mahidol_logo.png'
 
 function Login() {
