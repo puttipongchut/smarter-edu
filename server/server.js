@@ -2,10 +2,10 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(express.json());
