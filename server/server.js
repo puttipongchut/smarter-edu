@@ -7,9 +7,14 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://smarter-edu.vercel.app/' // Replace with your Vercel frontend URL
+];
+
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(cookieParser());
 
 const users = [
