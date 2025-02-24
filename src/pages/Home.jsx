@@ -39,7 +39,7 @@ function Home() {
   };
 
   const handleLogout = async () => {
-    await axios.post("http://localhost:8080/logout", {}, { withCredentials: true });
+    await axios.post("/api/logout", {}, { withCredentials: true });
     navigate("/login");
   };
 

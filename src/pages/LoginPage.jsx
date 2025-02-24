@@ -35,7 +35,7 @@ const Login = ({ setToken }) => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8080/login', { email, password }, { withCredentials: true });
+      const response = await axios.post('/api/login', { email, password }, { withCredentials: true });
       setToken(response.data.token);
       setShowSuccessModal(true);
       setTimeout(() => {
