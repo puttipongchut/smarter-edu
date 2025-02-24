@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 // Login Route
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   const user = users.find(u => u.email === email);
 
@@ -38,7 +38,7 @@ app.post('/login', (req, res) => {
 });
 
 // Logout Route
-app.post('/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
   res.clearCookie('token');
   res.json({ message: "Logged out" });
 });
