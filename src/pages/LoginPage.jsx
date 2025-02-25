@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../components/AuthContext';
 import Mahidol_logo from '../assets/Mahidol_logo.png';
 import LoginSuccessModal from '../components/LoginSuccess';
+import LoginFailedModal from '../components/LoginFail';
 
-const Login = ({ setToken }) => {
+function Login() {
   const [showModal, setShowModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
   const handleModalOpen = () => setShowModal(true);
   const handleModalClose = () => setShowModal(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
   const [authMode, setAuthMode] = useState('user');
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleAuthClick = () => {
@@ -26,28 +27,27 @@ const Login = ({ setToken }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit(e);
+      handleLogin();
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
+  const validEmail = import.meta.env.VITE_USER_NAME;
+  const validPassword = import.meta.env.VITE_PASS_WORD;
 
-    try {
-      const response = await axios.post('/api/login', { email, password }, { withCredentials: true });
-      setToken(response.data.token);
-      setShowSuccessModal(true);
-      setTimeout(() => {
-        setShowSuccessModal(false);
-        navigate('/home');
-      }, 3000);
-      
-      //navigate('/home'); // Redirect to Home page
-    } catch (error) {
-      setError("Invalid email or password");
+  const handleLogin = () => {
+    if (email === validEmail && password === validPassword) {
+        setShowSuccessModal(true);
+        login();
+        
+        setTimeout(() => {
+            setShowSuccessModal(false);
+            navigate('/home');
+          }, 3000);
+    } else {
+        setShowFailModal(true);
+        setTimeout(() => setShowFailModal(false), 2000);
     }
-  };
+};
 
   return (
     <>
@@ -78,9 +78,7 @@ const Login = ({ setToken }) => {
                   >
                     ← Back
                   </button>
-                  <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                      {error && <p className="text-red-500">{error}</p>}
                       <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
                         Student Email
                       </label>
@@ -109,11 +107,10 @@ const Login = ({ setToken }) => {
                     </div>
                     <button
                       className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
-                      type='submit'
+                      onClick={handleLogin}
                     >
                       Log In
                     </button>
-                  </form>
                 </>
               )}
             </div>
@@ -129,7 +126,8 @@ const Login = ({ setToken }) => {
         </div>
       </div>
 
-      {showSuccessModal && <LoginSuccessModal onClose={() => setShowModal(false)} />}
+      {showSuccessModal && <LoginSuccessModal onClose={() => setShowSuccessModal(false)} />}
+      {showFailModal && <LoginFailedModal onClose={() => setShowFailModal(false)} />}
 
       {showModal && (
         <div className="homePage fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -163,10 +161,6 @@ const Login = ({ setToken }) => {
       )}
     </>
   );
-}
-
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired
 }
 
 export default Login;
