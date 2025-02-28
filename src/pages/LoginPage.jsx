@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
+import axios from 'axios';
 import Mahidol_logo from '../assets/Mahidol_logo.png';
 import LoginSuccessModal from '../components/LoginSuccess';
 import LoginFailedModal from '../components/LoginFail';
@@ -13,41 +14,50 @@ function Login() {
   const handleModalClose = () => setShowModal(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [authMode, setAuthMode] = useState('user');
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleAuthClick = () => {
-    setAuthMode('auth');
+  const handleRegisterClick = () => {
+    setAuthMode('register');
   };
 
   const handleBackClick = () => {
-    setAuthMode('user');
+    setAuthMode('login');
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleLogin();
+      authMode === 'register' ? handleRegister() : handleLogin();
     }
   };
 
-  const validEmail = import.meta.env.VITE_USER_NAME;
-  const validPassword = import.meta.env.VITE_PASS_WORD;
-
-  const handleLogin = () => {
-    if (email === validEmail && password === validPassword) {
-        setShowSuccessModal(true);
-        login();
-        
-        setTimeout(() => {
-            setShowSuccessModal(false);
-            navigate('/home');
-          }, 3000);
-    } else {
-        setShowFailModal(true);
-        setTimeout(() => setShowFailModal(false), 2000);
+  const handleRegister = async () => {
+    try {
+      await axios.post('/api/register', { email, password });
+      setAuthMode('login');
+      alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
+    } catch (error) {
+      alert('ลงทะเบียนไม่สำเร็จ โปรดลองอีกครั้ง');
     }
-};
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('/api/login', { email, password });
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      setShowSuccessModal(true);
+      login();
+      setTimeout(() => {
+        setShowSuccessModal(false);
+        navigate('/home'); // Navigate to the home page
+      }, 3000);
+    } catch (error) {
+      setShowFailModal(true);
+      setTimeout(() => setShowFailModal(false), 2000);
+    }
+  };
 
   return (
     <>
@@ -59,15 +69,48 @@ function Login() {
                 <img src={Mahidol_logo} alt="Mahidol_logo" className='rounded-full w-20 h-18' />
               </div>
               <h1 className="text-2xl font-bold mb-4">MAHIDOL STUDENT LOG IN</h1>
-              {authMode === 'user' ? (
+              {authMode === 'login' ? (
                 <>
                   <p className="mb-4 text-xl">สวัสดี! นักศึกษามหาวิทยาลัยมหิดล</p>
-                  <p className="mb-4 text-xl">สำหรับนักศึกษาที่มีรหัสผ่าน Internet Account คลิกเข้าระบบที่ปุ่ม Mahidol Authen</p>
+                  <p className="mb-4 text-xl">สำหรับนักศึกษาที่มีรหัสผ่าน Internet Account คลิกเข้าสู่ระบบที่ปุ่ม Log In</p>
+                  <div className="mb-4">
+                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
+                      Student Email
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="student-email"
+                      type="email"
+                      placeholder="Enter your student email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
+                      Password
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </div>
                   <button
-                    className="bg-[#AA800E] transition ease-in-out delay-800 text-white hover:scale-110 hover:bg-[#dfa812] duration-300 font-bold py-2 px-4 rounded-lg mb-4"
-                    onClick={handleAuthClick}
+                    className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
+                    onClick={handleLogin}
                   >
-                    Mahidol Authen
+                    Log In
+                  </button>
+                  <button
+                    className="bg-[#AA800E] transition ease-in-out delay-800 text-white hover:scale-110 hover:bg-[#dfa812] duration-300 font-bold py-2 px-4 rounded-lg mb-4 ml-2"
+                    onClick={handleRegisterClick}
+                  >
+                    Register
                   </button>
                 </>
               ) : (
@@ -78,39 +121,42 @@ function Login() {
                   >
                     ← Back
                   </button>
-                    <div className="mb-4">
-                      <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
-                        Student Email
-                      </label>
-                      <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="student-email"
-                        type="email"
-                        placeholder="Enter your student email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
-                        Password
-                      </label>
-                      <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                      />
-                    </div>
-                    <button
-                      className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
-                      onClick={handleLogin}
-                    >
-                      Log In
-                    </button>
+                  <div className='text-left'>
+                    <p className="mb-4 text-l font-semibold">ลงทะเบียน</p>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
+                      Student Email
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="student-email"
+                      type="email"
+                      placeholder="Enter your student email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
+                      Password
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </div>
+                  <button
+                    className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
+                    onClick={handleRegister}
+                  >
+                    Register
+                  </button>
                 </>
               )}
             </div>
