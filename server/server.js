@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
-const path = require('path');
 const cors = require('cors');
 
 dotenv.config();
@@ -59,11 +58,5 @@ app.get('/api/protected', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
 
 module.exports = app;
