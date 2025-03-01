@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cors({
-    origin: 'https://smarter-edu-backend.vercel.app',
+    origin: 'https://smarter-edu.vercel.app',
     credentials: true,
   }));
 
