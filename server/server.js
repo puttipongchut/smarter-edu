@@ -3,12 +3,18 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
+const path = require('path');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(helmet());
+app.use(cors({
+    origin: 'https://smarter-edu-backend.vercel.app',
+    credentials: true,
+  }));
 
 //const users = [{ id: 1, email: 'user@student.mahidol.ac.th', password: '$2a$10$7QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8' }]; // Password is hashed version of 'password123'
 let users = [];
@@ -51,7 +57,13 @@ app.get('/api/protected', (req, res) => {
     }
 });
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 module.exports = app;
