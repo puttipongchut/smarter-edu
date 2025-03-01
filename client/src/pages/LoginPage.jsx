@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 import axios from 'axios';
@@ -17,6 +17,14 @@ function Login() {
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      login();
+      navigate('/home');
+    }
+  }, [login, navigate]);
 
   const handleRegisterClick = () => {
     setAuthMode('register');
