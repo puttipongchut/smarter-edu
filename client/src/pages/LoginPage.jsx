@@ -34,7 +34,7 @@ function Login() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('/api/register', { email, password });
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register`, { email, password });
       setAuthMode('login');
       alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
     } catch (error) {
@@ -44,7 +44,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/api/login', { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login`, { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
       setShowSuccessModal(true);
