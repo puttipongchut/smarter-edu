@@ -33,10 +33,10 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      setShowSuccessModal(true);
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login`, { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
+      setShowSuccessModal(true);
       login();
       setTimeout(() => {
         setShowSuccessModal(false);
@@ -95,7 +95,7 @@ function Login() {
               </button>
             </div>
             <p className="mt-4">
-              <button onClick={handleModalOpen} className="text-blue-500 hover:text-blue-700">
+              <button /*onClick={handleModalOpen}*/ className="text-blue-500 hover:text-blue-700">
                 ตรวจสอบรหัสล็อกอิน กดตรงนี้
               </button>
             </p>
@@ -125,7 +125,7 @@ function Login() {
             <p className="text-lg text-gray-800">
               Email : user@student.mahidol.ac.th
             </p>
-            <p className='text-lg text-gray-800'>Password : password123</p>
+            <p className='text-lg text-gray-800'>Password : pobeiei55</p>
 
             {/* Close Button */}
             <div className="mt-4 text-center">
