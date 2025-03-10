@@ -40,8 +40,7 @@ function Home() {
   }
 
   const handleLogout = () => {
-    logout();
-    navigate('/');
+    logout(navigate);
   }
 
   return (

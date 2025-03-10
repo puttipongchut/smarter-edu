@@ -14,7 +14,6 @@ function Login() {
   const handleModalClose = () => setShowModal(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -26,27 +25,9 @@ function Login() {
     }
   }, [login, navigate]);
 
-  const handleRegisterClick = () => {
-    setAuthMode('register');
-  };
-
-  const handleBackClick = () => {
-    setAuthMode('login');
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      authMode === 'register' ? handleRegister() : handleLogin();
-    }
-  };
-
-  const handleRegister = async () => {
-    try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register`, { email, password });
-      setAuthMode('login');
-      alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
-    } catch (error) {
-      alert('ลงทะเบียนไม่สำเร็จ โปรดลองอีกครั้ง');
+      handleLogin();
     }
   };
 
@@ -77,96 +58,41 @@ function Login() {
                 <img src={Mahidol_logo} alt="Mahidol_logo" className='rounded-full w-20 h-18' />
               </div>
               <h1 className="text-2xl font-bold mb-4">MAHIDOL STUDENT LOG IN</h1>
-              {authMode === 'login' ? (
-                <>
-                  <p className="mb-4 text-xl">สวัสดี! นักศึกษามหาวิทยาลัยมหิดล</p>
-                  <p className="mb-4 text-xl">สำหรับนักศึกษาที่มีรหัสผ่าน Internet Account คลิกเข้าสู่ระบบที่ปุ่ม Log In</p>
-                  <div className="mb-4">
-                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
-                      Student Email
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="student-email"
-                      type="email"
-                      placeholder="Enter your student email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
-                      Password
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <button
-                    className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
-                    onClick={handleLogin}
-                  >
-                    Log In
-                  </button>
-                  <button
-                    className="bg-[#AA800E] transition ease-in-out delay-800 text-white hover:scale-110 hover:bg-[#dfa812] duration-300 font-bold py-2 px-4 rounded-lg mb-4 ml-2"
-                    onClick={handleRegisterClick}
-                  >
-                    Register
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className='text-[#0035AD] transition delay-800 hover:text-blue-700 font-bold mb-4 flex items-center'
-                    onClick={handleBackClick}
-                  >
-                    ← Back
-                  </button>
-                  <div className='text-left'>
-                    <p className="mb-4 text-l font-semibold">ลงทะเบียน</p>
-                  </div>
-                  <div className="mb-4">
-                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
-                      Student Email
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="student-email"
-                      type="email"
-                      placeholder="Enter your student email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
-                      Password
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <button
-                    className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
-                    onClick={handleRegister}
-                  >
-                    Register
-                  </button>
-                </>
-              )}
+              <p className="mb-4 text-xl">สวัสดี! นักศึกษามหาวิทยาลัยมหิดล</p>
+              <p className="mb-4 text-xl">สำหรับนักศึกษาที่มีรหัสผ่าน Internet Account คลิกเข้าสู่ระบบที่ปุ่ม Log In</p>
+              <div className="mb-4">
+                <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="student-email">
+                  Student Email
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="student-email"
+                  type="email"
+                  placeholder="Enter your student email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="text-left block text-gray-700 text-m font-bold mb-2" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
+              <button
+                className="bg-[#0035AD] transition ease-in-out delay-800 hover:scale-110 hover:bg-blue-500 duration-300 text-white font-bold py-2 px-4 rounded-lg"
+                onClick={handleLogin}
+              >
+                Log In
+              </button>
             </div>
             <p className="mt-4">
               <button onClick={handleModalOpen} className="text-blue-500 hover:text-blue-700">

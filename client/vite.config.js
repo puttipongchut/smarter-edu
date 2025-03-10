@@ -9,7 +9,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': API_BASE_URL,
+      '/api': {
+        target: API_BASE_URL,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
 });
