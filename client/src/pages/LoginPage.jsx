@@ -36,8 +36,8 @@ function Login() {
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login`, { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
-      setShowSuccessModal(true);
       login();
+      setShowSuccessModal(true);
       setTimeout(() => {
         setShowSuccessModal(false);
         navigate('/home'); // Navigate to the home page
