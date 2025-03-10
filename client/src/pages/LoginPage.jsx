@@ -33,11 +33,11 @@ function Login() {
 
   const handleLogin = async () => {
     try {
+      setShowSuccessModal(true);
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login`, { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
       login();
-      setShowSuccessModal(true);
       setTimeout(() => {
         setShowSuccessModal(false);
         navigate('/home'); // Navigate to the home page
