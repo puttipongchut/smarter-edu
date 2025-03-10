@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
 
 dotenv.config();
 
@@ -13,27 +15,34 @@ app.use(helmet());
 app.use(cors({
     origin: 'https://smarter-edu.vercel.app',
     credentials: true,
-  }));
+}));
 
-//const users = [{ id: 1, email: 'user@student.mahidol.ac.th', password: '$2a$10$7QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8QJ8' }]; // Password is hashed version of 'password123'
-let users = [];
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+const user = {
+    email: process.env.USER_EMAIL,
+    password: process.env.USER_PASSWORD_HASH, // hashed password
+};
 
 app.get('/', (req, res) => {
     res.send('API running');
 });
 
-app.post('/api/register', async (req, res) => {
-    const { email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { id: users.length + 1, email, password: hashedPassword };
-    users.push(newUser);
-    res.status(201).send({ message:'User registered', userId: newUser.id });
-});
+app.post('/api/login', [
+    body('email').isEmail(),
+    body('password').isLength({ min: 6 })
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = users.find(u => u.email === email);
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (email === user.email && await bcrypt.compare(password, user.password)) {
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ message: 'Login successful', token });
     } else {
